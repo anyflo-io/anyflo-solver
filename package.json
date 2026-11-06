@@ -10,5 +10,8 @@
   },
   "peerDependencies": {
     "typescript": "^7"
+  },
+  "dependencies": {
+    "@anyflo/lib": "^0.1.0"
   }
 }
