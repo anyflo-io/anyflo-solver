@@ -146,3 +146,14 @@ packages/solver/bidding-price.jsonc
 # Code quality reports (bun run quality)
 /gl-code-quality-report.json
 /quality-report/
+
+# Standalone private configuration and generated artifacts
+/solver.config.json
+/private/
+/foundry/lib/
+/foundry/out/
+/foundry/cache/
+/.tools/
+/presentation/generated/
+/foundry/vendor/
+/foundry/.foundry/

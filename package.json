@@ -1,17 +1,35 @@
 {
-  "name": "@anyflo/solver",
-  "module": "index.ts",
-  "type": "module",
-  "scripts": {
-    "typecheck": "bun check"
-  },
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^7"
-  },
-  "dependencies": {
-    "@anyflo/lib": "^0.1.0"
-  }
+	"name": "@anyflo/solver",
+	"module": "index.ts",
+	"type": "module",
+	"scripts": {
+		"typecheck": "bun check",
+		"start": "bun run index.ts",
+		"build": "bun build index.ts --target bun --outdir dist",
+		"test": "bun test ./tests",
+		"aqua": "bun run scripts/aqua-position.ts"
+	},
+	"devDependencies": {
+		"@types/bun": "1.4.4",
+		"@foundry-rs/forge": "1.7.1",
+		"@foundry-rs/anvil": "1.7.1",
+		"@mermaid-js/mermaid-cli": "11.17.0"
+	},
+	"peerDependencies": {
+		"typescript": "^7"
+	},
+	"dependencies": {
+		"@anyflo/lib": "0.1.0",
+		"@1inch/aqua-sdk": "0.4.0",
+		"@1inch/swap-vm-sdk": "0.5.0",
+		"@uniswap/universal-router-sdk": "5.16.2",
+		"cbor-x": "^1.6.8",
+		"viem": "^2.57.11",
+		"zod": "~4.6.7"
+	},
+	"trustedDependencies": [
+		"@foundry-rs/forge",
+		"@foundry-rs/anvil",
+		"puppeteer"
+	]
 }

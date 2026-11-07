@@ -5,9 +5,10 @@
 An [ETHGlobal Mumbai](https://ethglobal.com/events/mumbai) project exploring how
 DeFi liquidity can execute payment orders from Anyflo's existing system.
 
-> **Status:** The repository currently contains the project setup and published
-> library dependency. The Solver adapters, runnable demo and presentation described
-> below are planned work, not completed or verified capabilities.
+> **Status:** The standalone Solver, provider adapters and Aqua position tools are
+> implemented. Read-only live API quotes and monetary safety tests have been
+> exercised. Mainnet settlement is not claimed; the local mock-Hub demo and
+> presentation are delivered as separate implementation steps below.
 
 ## Anyflo and the Solver
 
@@ -43,6 +44,9 @@ Use the Uniswap Trading API for quotes and transaction construction, then execut
 an AMM swap within the accepted order's amount and slippage limits. The target is
 same-chain Uniswap v2/v3/v4 liquidity, not UniswapX orders or a filler service.
 
+Code: [API and router validation](src/uniswap.ts) ·
+[developer feedback](FEEDBACK.md).
+
 ### 1inch Aqua and SwapVM
 
 Build a custom, permissionless Aqua position app using the official SwapVM engine:
@@ -53,6 +57,10 @@ The on-chain SwapVM quote determines executable terms. A separate 1inch API quot
 provides a market reference; a generic aggregator quote is not evidence of Aqua
 liquidity or execution. This design does not require becoming a 1inch resolver
 or discovering arbitrary positions through a global feed.
+
+Code: [Aqua execution](src/aqua.ts) ·
+[custom position builder and lifecycle](src/aqua-position.ts) ·
+[maker CLI](scripts/aqua-position.ts).
 
 ## Planned integration
 
@@ -121,22 +129,67 @@ regulatory certification.
 ## Development
 
 This is an independent Bun repository, not a package in the Anyflo backend
-workspace. It depends on the published
+workspace. It uses the public
 [`@anyflo/lib`](https://gitlab.com/api/v4/projects/85458236/packages/npm/@anyflo/lib)
-and must not import or link source files from the backend's `packages/` tree.
-Only essential code unavailable in the public library will be copied.
+package for wire contracts, authentication and shared helpers. The package is
+anonymously downloadable; access to the private backend source is not required.
+There are no imports, symlinks or workspace dependencies into that source.
 
-With Bun installed and access to the configured package registry:
+Use Bun 1.4.4 or newer:
 
 ```sh
 bun install --frozen-lockfile
 bun run typecheck
+bun run test
+bun run build
+bun run start --help
 ```
 
-These are the current setup commands, not a Solver or demo launcher. Runtime,
-demo and presentation commands will be documented alongside their implementation.
-Keep registry tokens, provider API keys, private signing keys and runtime state
-out of commits.
+### Private Solver configuration
+
+```sh
+mkdir -p private
+chmod 700 private
+cp solver.config.example.json private/solver.config.json
+chmod 600 private/solver.config.json
+```
+
+Replace the example Hub identity and zero contract addresses with values
+provisioned by your Anyflo operator. Configure the admitted token pair and chosen
+strategy. Both `uniswapApiKey` and `oneInchApiKey` belong in this private JSON file;
+examples and the local demo use placeholders or synthetic credentials.
+
+Provide these private environment inputs without committing them:
+
+- `EVM_PRIVATE_KEY`: the EVM signer whose address receives the direct deposit.
+- `SOLVER_AUTH_JWK`: a private Ed25519 JWK for the registered Solver ID and key ID.
+- `AQUA_MAKER_PRIVATE_KEY`: the separate LP maker key, only for explicitly
+  authorized position-management transactions.
+
+The configuration example is not a working mainnet deployment. `--check` performs
+read-only RPC, contract/decimal and quote checks and never approves or transfers
+tokens. `--execute` explicitly enables automatic transactions for funded orders:
+
+```sh
+bun run start --config private/solver.config.json --check --amount 10000000
+bun run start --config private/solver.config.json --execute
+```
+
+API quotes can exceed Anyflo's normal 1.5-second auction. Use a 10-second auction
+for this integration where your backend operator supports it; the Solver still
+declines quotes that miss the actual broadcast deadline.
+
+Keep configuration, signing keys, registry credentials and checkpoint state out
+of commits. Funded or executing orders do not resume automatically after a
+process restart. Reconcile transactions and order state with the operator;
+never delete checkpoints to force another spend. Cleanly completed orders can
+be restarted and acknowledge a verified duplicate delivery without paying twice.
+
+The state directory's `.solver.lock` is not automatically stolen after a crash.
+Before manually removing a stale process lock, confirm the recorded process is
+gone and reconcile pending receipts. Removing that lock does **not** reconcile or
+authorize an unresolved order. This is not a production recovery or automatic
+refund system.
 
 ## Delivery roadmap
 
@@ -160,5 +213,7 @@ out of commits.
 
 ## License
 
-[Mozilla Public License 2.0](LICENSE). Third-party protocol code retains its
-own license and attribution requirements.
+[Mozilla Public License 2.0](LICENSE) for project-owned code. See
+[third-party notices](THIRD_PARTY_NOTICES.md) for the separate SDK and contract
+terms, including the source-available Aqua/SwapVM licenses. Public source and a
+local demo do not grant unrestricted commercial or production rights.

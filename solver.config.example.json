@@ -1,0 +1,31 @@
+{
+	"hubUrl": "wss://solver-hub.example.com/connect",
+	"solverId": 1,
+	"kid": 1,
+	"chainId": 8453,
+	"rpcUrl": "https://mainnet.base.org",
+	"depositAccount": "0x0000000000000000000000000000000000000000",
+	"deliveryAccount": "0x0000000000000000000000000000000000000000",
+	"tokenIn": {
+		"address": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+		"decimals": 6,
+		"symbol": "USDT"
+	},
+	"tokenOut": {
+		"address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+		"decimals": 6,
+		"symbol": "USDC"
+	},
+	"strategy": "Uniswap",
+	"marginBps": 10,
+	"slippageBps": 50,
+	"quoteTimeoutMs": 5000,
+	"stateDir": "private/state",
+	"finality": "safe",
+	"uniswapApiKey": "REPLACE_WITH_PRIVATE_UNISWAP_API_KEY",
+	"oneInchApiKey": "REPLACE_WITH_PRIVATE_1INCH_API_KEY",
+	"uniswapApiUrl": "https://trade-api.gateway.uniswap.org/v1",
+	"oneInchApiUrl": "https://api.1inch.com/swap/v6.1",
+	"universalRouter": "0xd6145b2D3F379919E8CdEda7B97e37c4b2Ca9c40",
+	"permit2": "0x000000000022D473030F116dDEE9F6B43aC78BA3"
+}
