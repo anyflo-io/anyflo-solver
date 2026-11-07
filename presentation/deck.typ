@@ -35,6 +35,31 @@
 // independently through published contracts and a local mock Hub. The local demo
 // does not run the production backend or its screening.
 
+== Business use case: paying a supplier
+
+#strong[Scenario:] A business holds bridged USDT on Base; its supplier wants native USDC on Base.
+
+- The business wants a clear quote and delivery without managing a swap.
+- The supplier wants the agreed asset at the specified address.
+- The payment provider needs policy checks and evidence for its obligations.
+
+// Speaker notes: This is a concrete same-chain example matching the demo's
+// target asset pair, not a claim that the prototype supports cross-chain
+// transfers or that this particular payment has been executed on mainnet.
+
+== User story: quote to supplier delivery
+
+#strong[As a business customer,] I want to pay a supplier in USDC using my USDT,
+so the supplier receives the agreed amount without my team operating DeFi.
+
+1. Submit the payment intent and receive a solver bid.
+2. Fund the accepted order; the Solver verifies the deposit.
+3. The Solver swaps through its selected source and delivers USDC.
+
+// Speaker notes: The customer does not separately choose an AMM transaction.
+// Anyflo coordinates the order and the Solver handles liquidity and settlement.
+// The amount and fee shown to the customer depend on the accepted order.
+
 == The Solver: from inventory to liquidity access
 <the-solver-from-inventory-to-liquidity-access>
 A Solver is the #strong[liquidity and execution agent], not a new payment network.
@@ -60,6 +85,49 @@ One configured EVM pair, fixed input, one strategy and one active order.
 // src/aqua-position.ts, demo/run.ts. SDKs and upstream swap engines retain
 // attribution: we built the application and payment integration, not a new
 // Uniswap or SwapVM engine. No monorepo Solver modularization was performed.
+
+== Why compliance must cover the route
+
+Payment providers may need to meet sanctions, AML and internal risk obligations.
+Screening the sender and recipient alone does not assess how funds move.
+
+- An AMM route can involve multiple tokens, pools and venues.
+- A payment provider needs an auditable route decision consistent with policy.
+- Requirements depend on jurisdiction, customer and applicable law.
+
+#strong[Today:] Anyflo screens counterparties; Solver route checks are future work.
+
+// Speaker notes: Existing screening is in the production backend; the mock demo
+// does not run it. The solver route checks are a future design, not a legal
+// certification or a claim that AMM liquidity is inherently compliant.
+
+== Why check an AMM route before bidding?
+
+The Solver can inspect a quoted route #strong[before committing] to an order:
+
+1. Request an AMM quote with expected output and protected minimum.
+2. #strong[Future:] evaluate the proposed assets, pools and venues against policy.
+3. Bid only if the route is acceptable and the economics meet the order.
+
+#strong[Future:] recheck the refreshed route before execution; quotes can change.
+
+// Speaker notes: Pre-bid review lets the solver avoid promising an order on a
+// route it cannot use under its policy. Quotes do not reserve liquidity or
+// guarantee future execution; a post-deposit requote may fail, and route checks
+// must be repeated before execution. This is a planned mechanism, not built.
+
+== How on-chain liquidity funds the payout
+
+- #strong[Uniswap:] liquidity providers deposit tokens into AMM pools; the Solver swaps against a quoted pool route.
+- #strong[Aqua:] a maker configures a wallet-backed position; SwapVM quotes and executes against that position.
+- After deposit verification, the Solver swaps its net input and uses the output for the agreed DeliveryAccount payout.
+
+Pool reserves and maker backing can change; neither a quote nor an API response guarantees liquidity.
+
+// Speaker notes: Both sources need real LP or maker capital. The selected
+// strategy is pinned, not silently replaced. The 1inch Classic quote is a market
+// reference only; the Aqua position's executable quote comes from SwapVM.
+// Slippage limits and actual receipt checks are transaction safety, not AML.
 
 == Integration: choose a source, preserve Anyflo settlement
 <integration-choose-a-source-preserve-anyflo-settlement>
