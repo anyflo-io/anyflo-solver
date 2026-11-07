@@ -1,0 +1,8 @@
+# Foundry build outputs and vendored dependencies (all generated locally by scripts/setup-foundry.ts).
+cache/
+out/
+broadcast/
+lib/
+vendor/
+.foundry/
+deployments/

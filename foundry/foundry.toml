@@ -1,0 +1,78 @@
+# Anyflo solver demo fixture — main Solidity graph (SwapVM v1.0.2 + Aqua 1.0.1 + fixture-owned doubles).
+# Matches upstream swap-vm v1.0.2 compile settings (solc 0.8.30, via-IR, optimizer 700 runs + yul steps).
+# Permit2 (0.8.17) and UniversalRouter (0.8.26) are built as isolated graphs from vendored pins; see
+# scripts/setup-foundry.ts. Uniswap V3 core/periphery deploy from published npm artifacts, never compiled here.
+# Aqua note: swap-vm v1.0.2 imports "@1inch/aqua/src/..." (repo layout) while the npm @1inch/aqua@1.0.1
+# package uses contracts/ — the first remapping bridges the two; both vendored from 1.0.1 sources.
+[profile.default]
+libs = []
+auto_detect_remappings = false
+
+[profile.fixture]
+src = "contracts"
+out = "out"
+cache_path = "cache"
+libs = []
+solc_version = "0.8.30"
+evm_version = "cancun"
+via_ir = true
+optimizer = true
+optimizer_runs = 700
+bytecode_hash = "none"
+fs_permissions = [{ access = "read", path = "./" }]
+remappings = [
+	"forge-std/=vendor/forge-std/src/",
+	"@1inch/aqua/src/=vendor/aqua/contracts/",
+	"@1inch/aqua/=vendor/aqua/",
+	"@1inch/solidity-utils/=vendor/solidity-utils/",
+	"@openzeppelin/contracts/=vendor/openzeppelin/",
+	"swap-vm/=vendor/swap-vm/src/",
+	"solmate/=vendor/universal-router/lib/solmate/",
+]
+
+[profile.fixture.optimizer_details]
+yul = true
+yulDetails = { stackAllocation = true, optimizerSteps = "dhfoDgvulfnTUtnIf[xa[r]EscLMcCTUtTOntnfDIulLculVcul Tpeul]jmul[jul] VcTOcul jmul : fDnTOcmu" }
+
+[profile.permit2]
+src = "vendor/permit2/src"
+out = "vendor/permit2/out"
+cache_path = "cache/permit2"
+solc_version = "0.8.17"
+evm_version = "london"
+via_ir = true
+optimizer = true
+optimizer_runs = 1000000
+bytecode_hash = "none"
+remappings = ["solmate/=vendor/permit2/lib/solmate/src/"]
+
+[profile.router]
+src = "vendor/universal-router/contracts"
+out = "vendor/universal-router/out"
+cache_path = "cache/universal-router"
+solc_version = "0.8.26"
+evm_version = "cancun"
+via_ir = true
+optimizer = true
+optimizer_runs = 1
+bytecode_hash = "none"
+remappings = [
+  "solmate/=vendor/universal-router/lib/solmate/",
+  "permit2/=vendor/universal-router/lib/permit2/",
+  "@uniswap/v2-core/=vendor/uniswap/v2-core/",
+  "@uniswap/v3-core/=vendor/uniswap/v3-core/",
+  "@uniswap/v3-periphery/=vendor/universal-router/lib/v3-periphery/",
+  "@uniswap/v4-periphery/=vendor/universal-router/lib/v4-periphery/",
+  "@uniswap/v4-core/=vendor/universal-router/lib/v4-periphery/lib/v4-core/",
+  "v4-core/=vendor/universal-router/lib/v4-periphery/lib/v4-core/",
+  "v4-periphery/=vendor/universal-router/lib/v4-periphery/",
+  "@openzeppelin/=vendor/universal-router/lib/v4-periphery/lib/v4-core/lib/openzeppelin-contracts/",
+]
+
+
+[lint]
+lint_on_build = false
+
+[fmt]
+line_length = 120
+quote_style = "double"

@@ -9,6 +9,12 @@
 - Add bounded Permit2/router transaction validation, independently verified
   customer funding and delivery, and durable intent-before-broadcast checkpoints.
 - Add read-only preflight and Aqua position build/inspect/ship/dock tooling.
+- Add a reproducible Anvil demo with an authenticated mock Solver Hub, real
+  Uniswap V3/Permit2/Universal Router and Aqua/SwapVM deployments, and actual
+  test-token funding, swapping, delivery and Aqua ship/fill/dock receipts.
+- Add short-funding and completed-restart/duplicate-delivery scenarios, public
+  source integrity verification, and native Foundry builds/tests with checked
+  exit status.
 
 ### Safety boundaries
 

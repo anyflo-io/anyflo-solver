@@ -5,10 +5,11 @@
 An [ETHGlobal Mumbai](https://ethglobal.com/events/mumbai) project exploring how
 DeFi liquidity can execute payment orders from Anyflo's existing system.
 
-> **Status:** The standalone Solver, provider adapters and Aqua position tools are
-> implemented. Read-only live API quotes and monetary safety tests have been
-> exercised. Mainnet settlement is not claimed; the local mock-Hub demo and
-> presentation are delivered as separate implementation steps below.
+> **Status:** The standalone Solver and reproducible local demo are implemented.
+> Both strategies execute real local swaps and Anyflo-style payouts; Aqua also
+> demonstrates ship, fill and dock. The backend, provider HTTP responses and
+> settlement contracts are explicitly labeled test doubles. No mainnet settlement
+> or route-compliance implementation is claimed.
 
 ## Anyflo and the Solver
 
@@ -62,7 +63,7 @@ Code: [Aqua execution](src/aqua.ts) ·
 [custom position builder and lifecycle](src/aqua-position.ts) ·
 [maker CLI](scripts/aqua-position.ts).
 
-## Planned integration
+## Integration
 
 ```mermaid
 flowchart TD
@@ -97,22 +98,77 @@ The intended live pair is **bridged USDT to native USDC on Base**, not an
 Arbitrum-to-Base bridge. Mainnet execution requires verified deployments,
 appropriate funding and separate operator authorization; it is not claimed here.
 
-## Planned demo and verification
+## Run the local demo
 
-The local demo will use Foundry/Anvil, freshly deployed six-decimal test tokens
-and a mock Solver Hub that speaks the existing authentication and CBOR protocol.
-The real Solver process will receive an order, bid, accept, verify funding, swap,
-deliver and acknowledge.
+Prerequisites: Bun 1.4.4+, Git, `tar`, and network access for the first public
+dependency/compiler download. Foundry and Anvil are pinned npm dev dependencies;
+there is no Docker stack or private backend checkout to start.
 
-Uniswap AMM and Aqua/SwapVM execution will use real local protocol contracts.
-The Hub, provider HTTP responses for Anvil-only tokens, and minimal Anyflo
-settlement fixtures will be explicitly labeled test doubles. Test fixtures must
-move actual test tokens; prefunding the Solver's payout balance is not a
-substitute for a swap.
+```sh
+bun install --frozen-lockfile
+bun run demo:setup
+bun run demo --strategy both
+```
 
-The demo will show transaction receipts, recipient balance changes and final
-Aqua position balances. It will not prove that the complete Anyflo production
-backend, production compliance checks or mainnet settlement have run.
+Run either strategy independently, or exercise the safety scenarios:
+
+```sh
+bun run demo --strategy Uniswap
+bun run demo --strategy Aqua
+bun run demo --strategy Uniswap --scenario unfundedDeposit
+bun run demo --strategy Uniswap --scenario completedRestart
+```
+
+The script owns and stops its local Anvil, mock Hub, provider mock and real Solver
+child process. It generates test-only keys and private configuration; **no user
+API key, registered live Solver or real funds are needed**. Never reuse the
+deterministic Anvil wallets on a live chain.
+
+### What is real, and what is mocked?
+
+- **Real:** minted six-decimal test tokens, official Uniswap V3 pool/QuoterV2,
+  Permit2 and Universal Router, official Aqua/SwapVM, maker wallet backing,
+  ERC20 transfers, swap/payout receipts and final position balances.
+- **Mocked:** the existing Anyflo Hub API, customer/coordinator role, provider
+  HTTP responses for Anvil-only tokens, and small Anyflo settlement contracts.
+  The Hub still verifies JWTs and canonical signatures; the Solver still verifies
+  actual on-chain deposits and deliveries. No safety checks are bypassed.
+- A 1inch HTTP reference is not an Aqua execution quote. The Aqua position is
+  quoted and filled on-chain. Local provider HTTP data is not called a live API
+  quote.
+
+The Solver starts with zero input and output tokens. Each order credits 10 test
+USDT to the Solver, separately pays a 0.1 test-USDT protocol fee, swaps 9.99 test
+USDT and retains the configured 0.01 test-USDT input premium. The recipient gets
+the accepted USDC payout through a **separate** DeliveryAccount transaction.
+The JSON report checks those amounts and receipt identities.
+
+Verification on this build: **43 Bun tests** and **5 native Forge settlement
+tests** passed; the interactive Uniswap/Aqua runs passed **11/14 checks**. The
+suite also proves that short funding produces no swap/payout and that completed
+restart plus duplicate delivery does not spend twice. Funded restarts remain
+manual, not an automatic-recovery claim.
+
+```sh
+bun run test:contracts
+bun run test
+```
+
+The setup invokes platform-native Foundry executables and checks their exit
+status: the npm launcher alone can hide a failing compiler/test exit. Downloaded
+upstream source integrity can be checked with:
+
+```sh
+bun run scripts/setup-foundry.ts verify
+```
+
+Code: [shared demo harness](demo/run.ts) · [mock Hub](demo/hub.ts) ·
+[local provider transport](demo/provider.ts) · [pinned setup](scripts/setup-foundry.ts).
+
+Read-only live provider probes also returned HTTP 200, including a real Uniswap
+quote through this runtime and unsigned transaction builds. Those probes did not
+sign or broadcast a Base transaction. The local demo does **not** prove that the
+private production backend, its compliance gates or mainnet settlement ran.
 
 ## Compliance: existing context and future work
 
@@ -139,7 +195,9 @@ Use Bun 1.4.4 or newer:
 
 ```sh
 bun install --frozen-lockfile
+bun run demo:setup
 bun run typecheck
+bun run test:contracts
 bun run test
 bun run build
 bun run start --help

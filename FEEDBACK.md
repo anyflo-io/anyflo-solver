@@ -9,8 +9,8 @@ probes; it is not evidence of mainnet settlement.
 
 - The Trading API provides an AMM quote without requiring a prefunded payout
   balance, which fits deposit-funded payment execution.
-- Allowing v2/v3/v4 AMM routes found a Base bridged-USDT/native-USDC route where a
-  v3-only request returned no route.
+- Allowing v2/v3/v4 AMM routes found a Base bridged-USDT/native-USDC route;
+  a v3-only request returned no route.
 - Explicit protected amounts and Permit2 data make it possible to preserve the
   accepted payment's spend/output bounds through execution.
 
