@@ -1,0 +1,5 @@
+flowchart LR
+    Bank["Nordbank AG<br/>EUR fiat"] --> Ramp["Riverstone FX<br/>On-ramp"]
+    Ramp --> Chain["Anyflo on Base<br/>USDT to USDC"]
+    Chain --> Off["Deccan FX<br/>Off-ramp"]
+    Off --> Pay["Sahyadri Bank<br/>INR fiat"]

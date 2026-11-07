@@ -9,10 +9,10 @@
 	},
 	"sequence": {
 		"diagramMarginY": 4,
-		"actorMargin": 14,
-		"width": 110,
+		"actorMargin": 40,
+		"width": 150,
 		"height": 36,
-		"messageMargin": 0,
+		"messageMargin": 24,
 		"noteMargin": 4,
 		"mirrorActors": false,
 		"useMaxWidth": false

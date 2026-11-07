@@ -32,18 +32,10 @@ new payment protocol.
 - [Presentation (typst deck)](presentation/deck.typ)
 - [Demo evidence](presentation/evidence.json) - observed local demo artifacts.
 
-Edit the native Typst deck and [Mermaid diagrams](presentation/diagrams/).
-To rebuild the PDF, install Typst 0.15.1+ and Noto Sans fonts, then run:
-
-```sh
-bun install --frozen-lockfile
-bun run slides
-```
-
-Speaker notes are comments in the Typst source. The build renders the diagrams
-to SVG and compiles the PDF; it does not require Pandoc.
-
 ## Goals
+
+See the presentation (above) for busienss overview and user story and why we build Anyflo.
+The hackathon project goals:
 
 - Give Anyflo and its customers more liquidity options behind the same order API.
 - Demonstrate business payment orders as a use case for Uniswap and Aqua.
