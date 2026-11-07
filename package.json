@@ -10,7 +10,8 @@
 		"test:contracts": "bun run scripts/setup-foundry.ts --test",
 		"demo": "bun run scripts/demo.ts",
 		"demo:setup": "bun run scripts/setup-foundry.ts --build",
-		"aqua": "bun run scripts/aqua-position.ts"
+		"aqua": "bun run scripts/aqua-position.ts",
+		"slides": "bun run scripts/slides.ts"
 	},
 	"devDependencies": {
 		"@types/bun": "1.4.4",

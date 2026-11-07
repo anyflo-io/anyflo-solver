@@ -154,6 +154,5 @@ packages/solver/bidding-price.jsonc
 /foundry/out/
 /foundry/cache/
 /.tools/
-/presentation/generated/
 /foundry/vendor/
 /foundry/.foundry/

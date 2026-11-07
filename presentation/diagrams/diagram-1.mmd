@@ -1,0 +1,10 @@
+flowchart LR
+    Hub["Hub"] <-->|Bids| Solver["Solver"]
+    Solver --> Uni["Uniswap"]
+    Solver --> Aqua["Aqua"]
+    Ref["1inch ref"] -.-> Solver
+    Uni --> Wallet["Out"]
+    Aqua --> Wallet
+    Wallet --> Delivery["Delivery"]
+
+    Delivery --> Recipient["Payee"]

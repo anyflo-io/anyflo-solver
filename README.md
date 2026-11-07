@@ -26,6 +26,23 @@ through Uniswap or Aqua instead of requiring inventory of every payout token.
 It reuses Anyflo's existing API and order lifecycle rather than introducing a
 new payment protocol.
 
+## Presentation
+
+- [Presentation PDF](presentation/anyflo-solver.pdf)
+- [Presentation (typst deck)](presentation/deck.typ)
+- [Demo evidence](presentation/evidence.json) - observed local demo artifacts.
+
+Edit the native Typst deck and [Mermaid diagrams](presentation/diagrams/).
+To rebuild the PDF, install Typst 0.15.1+ and Noto Sans fonts, then run:
+
+```sh
+bun install --frozen-lockfile
+bun run slides
+```
+
+Speaker notes are comments in the Typst source. The build renders the diagrams
+to SVG and compiles the PDF; it does not require Pandoc.
+
 ## Goals
 
 - Give Anyflo and its customers more liquidity options behind the same order API.
@@ -248,18 +265,6 @@ Before manually removing a stale process lock, confirm the recorded process is
 gone and reconcile pending receipts. Removing that lock does **not** reconcile or
 authorize an unresolved order. This is not a production recovery or automatic
 refund system.
-
-## Delivery roadmap
-
-1. Implement the minimal two-strategy Solver, essential tests and usage docs;
-   create a signed, signed-off implementation commit.
-2. Add the mock Solver Hub, runnable Foundry demo and focused end-to-end tests;
-   create a separate signed, signed-off commit.
-3. Write presentation Markdown with integration-flow and swimlane Mermaid
-   diagrams, actual demo evidence and the project's added value.
-4. Convert the presentation to editable Typst slides and a rendered PDF.
-5. Later, apply the researched modular-strategy design to the production
-   Anyflo Solver. That monorepo work is not part of this implementation.
 
 ## Protocol and challenge references
 

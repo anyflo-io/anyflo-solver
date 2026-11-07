@@ -1,0 +1,17 @@
+sequenceDiagram
+    participant C as Customer
+    participant H as Hub / mock
+    participant S as Solver
+    participant V as Source
+    participant D as DepositAccount
+    H->>S: Order and deadline
+    Note over S: FUTURE pre-bid policy
+    S->>V: Quote
+    S->>H: Signed bid
+    H->>S: Assignment
+    S->>H: Signed acceptance
+    C->>D: Deposit
+    D-->>S: Net tokens
+    H->>S: Receipt reference
+    Note over S: Verify receipt
+    S->>H: Deposit ack

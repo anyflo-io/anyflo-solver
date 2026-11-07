@@ -1,0 +1,13 @@
+sequenceDiagram
+    participant H as Hub / mock
+    participant S as Solver
+    participant V as Source
+    participant D as DeliveryAccount
+    participant R as Recipient
+    Note over S: FUTURE recheck
+    S->>V: Fresh quote / bounded swap
+    V-->>S: Output tokens
+    S->>D: Separate payout
+    D-->>R: Agreed payout
+    H->>S: Delivery receipt
+    S->>H: Verified acknowledgment

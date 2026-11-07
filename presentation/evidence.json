@@ -1,0 +1,40 @@
+[
+  {
+    "strategy": "Uniswap",
+    "scenario": "positive",
+    "chainId": 31337,
+    "checks": 11,
+    "netInput": "10000000",
+    "protocolFee": "100000",
+    "retainedInput": "10000",
+    "recipientOutput": "9934087",
+    "initialSolverInput": "0",
+    "initialSolverOutput": "0",
+    "deposit": "0x01f55bad9912be637be9ab743bd5519da9fe07d324981c4b89c4706c5c5a1a23",
+    "swap": "0xbed7dff8d95d74bc78ca21a0dd94c6c2504fdf0fcaba5932ce2fabf4b40c61b7",
+    "delivery": "0x7e401c0922d8cc483a8b49fbb6fca99a8dc81076fde6964ca9d71c4938dfa986",
+    "aquaLifecycle": null,
+    "totalMs": 11389
+  },
+  {
+    "strategy": "Aqua",
+    "scenario": "positive",
+    "chainId": 31337,
+    "checks": 14,
+    "netInput": "10000000",
+    "protocolFee": "100000",
+    "retainedInput": "10000",
+    "recipientOutput": "9934580",
+    "initialSolverInput": "0",
+    "initialSolverOutput": "0",
+    "deposit": "0x308aab8ae9edfbf3c2989ee28485d24a632365ac098417e044acc98821213062",
+    "swap": "0x7b7e311a4447c32a4ac2b4664d9397d5a6e0dae63b51e40a8dc5013a6c32e1e9",
+    "delivery": "0x26b4ec36f0f61deb32a1053f2634d1414ad40035415a38c590f29ada9a55574b",
+    "aquaLifecycle": {
+      "shipHash": "0xd9e6c5b7abf6257d7eac3ce9d7ee720fda9f48f8bbbaca84861d5430a9f8096e",
+      "fillHash": "0x7b7e311a4447c32a4ac2b4664d9397d5a6e0dae63b51e40a8dc5013a6c32e1e9",
+      "dockHash": "0xb10c46972c0fe45045873ff6ceb4d39acc25b5cdf2a539d9ef6504facc5914bf"
+    },
+    "totalMs": 11319
+  }
+]
